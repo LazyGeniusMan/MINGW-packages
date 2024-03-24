@@ -74,6 +74,7 @@ build() {
     -DINSTALL_MKSPECSDIR=share/qt6/mkspecs \
     -DINSTALL_DESCRIPTIONSDIR=share/qt6/modules \
     -DINSTALL_DOCDIR=share/qt6/doc \
+    -DINSTALL_EXAMPLESDIR=share/doc/qt6/examples \
     -DPython_EXECUTABLE=${MINGW_PREFIX}/bin/python \
     -DFEATURE_gstreamer=OFF \
     ../${_pkgfn}
@@ -86,4 +87,19 @@ package() {
 
   install -d "$pkgdir${MINGW_PREFIX}"/share/licenses/${_realname}
   install -Dm644 $_pkgfn/LICENSE* -t "$pkgdir${MINGW_PREFIX}"/share/licenses/${_realname}
+
+  _base="$pkgdir"/usr/share/doc/qt6/examples
+
+  # The various example dirs have conflicting .pro files, but
+  # QtCreator requires them to be in the same top-level directory.
+  # Matching the Qt installer, only the qtbase project is kept.
+  mkdir -p $_base
+  cp ${_pkgfn}/qtbase/examples/examples.pro $_base
+
+  _fdirs=$(find "$_pkgfn" -maxdepth 2 -type d -name examples)
+  for _dir in $_fdirs; do
+    rm -f $_dir/{examples.pro,CMakeLists.txt,README}
+    cp -rn $_dir/* $_base
+  done
+
 }
