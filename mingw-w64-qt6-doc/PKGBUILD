@@ -74,6 +74,7 @@ build() {
     -DINSTALL_MKSPECSDIR=share/qt6/mkspecs \
     -DINSTALL_DESCRIPTIONSDIR=share/qt6/modules \
     -DINSTALL_DOCDIR=share/qt6/doc \
+    -DINSTALL_EXAMPLESDIR=share/doc/qt6/examples \
     -DPython_EXECUTABLE=${MINGW_PREFIX}/bin/python \
     -DFEATURE_gstreamer=OFF \
     ../${_pkgfn}
